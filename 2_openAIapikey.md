@@ -8,13 +8,7 @@ Para crear la API key en openAI, debe ingresar con su cuenta a la página de ope
   </a>
   </div>
 
-Después, debe desplegar el menú ``Personal`` e ingresar a ``View API keys`` 
-
- <div align="center">
-  <a>
-    <img src="imgs/key2.png">
-  </a>
-  </div>
+Ingresar a ``View API keys`` 
 
   En esta nueva pantalla debe hacer clic en ``Create new secret key`` 
 
