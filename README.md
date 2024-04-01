@@ -8,7 +8,7 @@ En este workshop integraremos algunas herramientas de Inteligencia Artificial a 
 
 Las instrucciones de cada etapa del proyecto son las siguientes:
 
-1. [Clonar el proyecto base](1_Fork_and_clone.md) 
+1. [Hacer Fork del proyecto base](1_Fork_and_clone.md) 
 2. [Crear la API key en openAI](2_openAIapikey.md)
 3. [Instalar las librerías necesarias](3_Instalaciones.md)
 4. [Descripción de las películas](4_movie_descriptions.md)
