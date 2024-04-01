@@ -44,12 +44,22 @@ Un vector no se puede agregar directamente a la base de datos, por lo tanto, deb
 En el siguiente ejemplo puede ver cómo crear un archivo binario a partir de una lista y como recuperar la lista a partir del archivo binario, este ejemplo es ilustrativo, no es necesario ejecutarlo.
 
 ````python
-from openai.embeddings_utils import get_embedding, cosine_similarity
 import numpy as np
+from openai import OpenAI
+
+_ = load_dotenv('openAI.env')
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key=os.environ.get('openAI_api_key'),
+)
+
+def get_embedding(text, model="text-embedding-3-small"):
+   text = text.replace("\n", " ")
+   return client.embeddings.create(input = [text], model=model).data[0].embedding
 
 #Generar binario
 desc = "película de la segunda guerra mundial"
-emb = get_embedding(desc,engine='text-embedding-ada-002')
+emb = get_embedding(desc)
 
 #Recuperar lista a partir del archivo binario
 emb_binary = np.array(emb).tobytes()
