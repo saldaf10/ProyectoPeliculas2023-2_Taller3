@@ -3,10 +3,16 @@ from movie.models import Movie
 import os
 import numpy as np
 
-import openai
-from openai.embeddings_utils import get_embedding, cosine_similarity
+from openai import OpenAI
 
 from dotenv import load_dotenv, find_dotenv
+
+def get_embedding(text, client, model="text-embedding-ada-002"):
+   text = text.replace("\n", " ")
+   return client.embeddings.create(input = [text], model=model).data[0].embedding
+
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 class Command(BaseCommand):
     help = 'Modify path of images'
@@ -15,12 +21,15 @@ class Command(BaseCommand):
 
         #Se lee del archivo .env la api key de openai
         _ = load_dotenv('../openAI.env')
-        openai.api_key  = os.environ['openAI_api_key']
+        client = OpenAI(
+        # This is the default and can be omitted
+            api_key=os.environ.get('openAI_api_key'),
+        )
         
         items = Movie.objects.all()
 
         req = "película de la segunda guerra mundial"
-        emb_req = get_embedding(req,engine='text-embedding-ada-002')
+        emb_req = get_embedding(req, client)
 
         sim = []
         for i in range(len(items)):
@@ -28,6 +37,7 @@ class Command(BaseCommand):
             emb = list(np.frombuffer(emb))
             sim.append(cosine_similarity(emb,emb_req))
         sim = np.array(sim)
+        print(sim)
         idx = np.argmax(sim)
         idx = int(idx)
         print(items[idx].title)
