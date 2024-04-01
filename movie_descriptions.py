@@ -1,12 +1,15 @@
 #importar librerías
 import os
-import openai
+from openai import OpenAI
 import json
 from dotenv import load_dotenv, find_dotenv
 
 #Se lee del archivo .env la api key de openai
 _ = load_dotenv('openAI.env')
-openai.api_key  = os.environ['openAI_api_key']
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key=os.environ.get('openAI_api_key'),
+)
 
 #Se carga la lista de películas de movie_titles.json
 with open('movie_titles.json', 'r') as file:
@@ -22,12 +25,12 @@ print(movies[0])
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=model,
         messages=messages,
         temperature=0,
     )
-    return response.choices[0].message["content"]
+    return response.choices[0].message.content
 
 #Definimos una instrucción general que le vamos a dar al modelo 
 
