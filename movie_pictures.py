@@ -1,6 +1,6 @@
 #importar librerías
 import os
-import openai
+from openai import OpenAI
 import json
 from dotenv import load_dotenv, find_dotenv
 import requests
@@ -10,7 +10,10 @@ import numpy as np
 
 #Se lee del archivo .env la api key de openai
 _ = load_dotenv('openAI.env')
-openai.api_key  = os.environ['openAI_api_key']
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key=os.environ.get('openAI_api_key'),
+)
 
 #Se carga la lista de películas de movie_titles.json
 with open('movie_descriptions.json', 'r') as file:
@@ -22,12 +25,15 @@ print(movies[idx_movie])
 
 #Se hace la conexión con la API de generación de imágenes. El prompt en este caso es:
 #Alguna escena de la película + "nombre de la película"
-response = openai.Image.create(
+response = client.images.generate(
+  model="dall-e-2",
   prompt=f"Alguna escena de la película {movies[np.random.randint(idx_movie)]['title']}",
+  size="256x256",
+  quality="standard",
   n=1,
-  size="256x256"
 )
-image_url = response['data'][0]['url']
+
+image_url = response.data[0].url
 
 # La API devuelve la url de la imagen, por lo que debemos generar una función auxiliar que
 # descargue la imagen.
